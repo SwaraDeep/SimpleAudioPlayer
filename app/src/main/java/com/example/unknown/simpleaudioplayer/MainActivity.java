@@ -1,11 +1,11 @@
 package com.example.unknown.simpleaudioplayer;
 
-import android.content.Intent;
 import android.media.MediaPlayer;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final MediaPlayer player = MediaPlayer.create(this, R.raw.one_time);
-        Button playButton = (Button) findViewById(R.id.playBtn);
+        final Button playButton = (Button) findViewById(R.id.playBtn);
         Button pauseButton = (Button) findViewById(R.id.pauseBtn);
         Button seekButton = (Button) findViewById(R.id.seekBtn);
 
@@ -23,7 +23,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 player.start();
+                player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        Toast.makeText(MainActivity.this, "I'm done", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
+
         });
 
         pauseButton.setOnClickListener(new View.OnClickListener() {
@@ -36,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
         seekButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int time = player.getDuration();
-                player.seekTo(time/2);
+                int time = player.getCurrentPosition();
+                player.seekTo(time + 20000);
             }
         });
     }
